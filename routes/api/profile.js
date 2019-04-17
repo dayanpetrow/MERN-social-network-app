@@ -147,7 +147,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
                 //update profile because it exists
                 Profile.findOneAndUpdate(
                     { user: req.user.id }, 
-                    {$set: profileFields }, 
+                    { $set: profileFields }, 
                     { new: true }
                 ).then(profile => res.json(profile));
             } else {
