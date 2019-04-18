@@ -3,8 +3,10 @@ import Input from "antd/lib/input";
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import axios from "axios";
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 
-export default class SignupPage extends Component {
+class SignupPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,14 +34,16 @@ export default class SignupPage extends Component {
 
     console.log(newUser);
 
-    axios
+    this.props.setUser(newUser);
+    
+    /* axios
       .post("/api/users/register", newUser)
       .then(res => console.log(res.data))
       .catch(err => {
         console.log(err.response.data);
         this.setState({ errors: err.response.data });
         console.log(this.state);
-      });
+      }); */
   };
 
   render() {
@@ -112,3 +116,11 @@ export default class SignupPage extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+      setUser: (user) => dispatch({ type: actions.TEST_DISPATCH, user })
+    };
+  };
+
+export default connect(null, mapDispatchToProps)(SignupPage);
