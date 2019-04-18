@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import { withRouter } from 'react-router-dom';
 import PropTypes from "prop-types";
 import Input from "antd/lib/input";
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
-import axios from "axios";
 import { connect } from "react-redux";
 import * as actions from "../../actions";
 
@@ -17,6 +17,17 @@ class SignupPage extends Component {
       password2: "",
       errors: {}
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(nextProps.errors);
+    if(nextProps.errors !== prevState.errors) {
+      return ({ errors: nextProps.errors })
+    }
+    return null;
+  }
+
+  componentDidUpdate() {
   }
 
   onChange = e => {
@@ -33,18 +44,7 @@ class SignupPage extends Component {
       password2: this.state.password2
     };
 
-    console.log(newUser);
-
-    this.props.setUser(newUser);
-
-    /* axios
-      .post("/api/users/register", newUser)
-      .then(res => console.log(res.data))
-      .catch(err => {
-        console.log(err.response.data);
-        this.setState({ errors: err.response.data });
-        console.log(this.state);
-      }); */
+    this.props.signUpUser(newUser, this.props.history);
   };
 
   render() {
@@ -119,21 +119,23 @@ class SignupPage extends Component {
 }
 
 SignupPage.propTypes = {
-  setUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  signUpUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  errors: state.errors
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    setUser: user => dispatch({ type: actions.TEST_DISPATCH, user })
+    signUpUser: (userData, history) => dispatch({ type: actions.SIGNUP_USER, userData, history })
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignupPage);
+)(withRouter(SignupPage));

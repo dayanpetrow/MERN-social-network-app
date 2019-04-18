@@ -1,4 +1,4 @@
-import * as actions from '../actions';
+//import * as actions from '../actions';
 
 const initialState = {
     isAuthenticated: false,
@@ -7,11 +7,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        case actions.TEST_DISPATCH:
-            return {
-                ...state,
-                user: action.user
-            }
         default:
          return state;
     }
