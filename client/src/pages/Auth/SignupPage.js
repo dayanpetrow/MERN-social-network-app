@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Input from "antd/lib/input";
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import axios from "axios";
-import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import { connect } from "react-redux";
+import * as actions from "../../actions";
 
 class SignupPage extends Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class SignupPage extends Component {
     console.log(newUser);
 
     this.props.setUser(newUser);
-    
+
     /* axios
       .post("/api/users/register", newUser)
       .then(res => console.log(res.data))
@@ -47,10 +48,10 @@ class SignupPage extends Component {
   };
 
   render() {
-
     const { errors } = this.state;
     return (
       <div>
+        {this.props.auth.user.name && (<div>{this.props.auth.user.name}</div>)}
         <Form.Item
           hasFeedback
           validateStatus={errors.name ? "error" : ""}
@@ -117,10 +118,22 @@ class SignupPage extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-      setUser: (user) => dispatch({ type: actions.TEST_DISPATCH, user })
-    };
-  };
+SignupPage.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
 
-export default connect(null, mapDispatchToProps)(SignupPage);
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setUser: user => dispatch({ type: actions.TEST_DISPATCH, user })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignupPage);
