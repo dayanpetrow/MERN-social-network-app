@@ -1,13 +1,20 @@
-//import * as actions from '../actions';
+import * as actions from "../actions";
+import isEmpty from "../utils/isEmpty";
 
 const initialState = {
-    isAuthenticated: false,
-    user: {}
+  isAuthenticated: false,
+  user: {}
 };
 
 export default function(state = initialState, action) {
-    switch (action.type) {
-        default:
-         return state;
-    }
-};
+  switch (action.type) {
+    case actions.LOGIN_USER_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: !isEmpty(action.payload),
+        user: action.payload
+      };
+    default:
+      return state;
+  }
+}

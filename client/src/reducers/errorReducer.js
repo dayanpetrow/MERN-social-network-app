@@ -4,9 +4,10 @@ const initialState = {};
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case actions.SIGNUP_USER_FAILURE: {
+    case actions.SIGNUP_USER_FAILURE:
       return Object.assign({}, action.payload);
-    }
+    case actions.LOGIN_USER_FAILURE:
+      return Object.assign({}, action.payload);
     default:
       return state;
   }
