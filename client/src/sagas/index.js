@@ -5,7 +5,7 @@ import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
 export function* rootSaga() {
-  yield all([watchSetUser(), watchLoginUser()]);
+  yield all([watchSetUser(), watchLoginUser(), watchLogoutUser()]);
 }
 
 function* watchSetUser() {
@@ -14,6 +14,10 @@ function* watchSetUser() {
 
 function* watchLoginUser() {
   yield takeLatest(actions.LOGIN_USER, workerLoginUser);
+}
+
+function* watchLogoutUser() {
+  yield takeLatest(actions.LOGOUT_USER, workerLogoutUser);
 }
 
 function* workerSignUpUser(action) {
@@ -41,5 +45,18 @@ function* workerLoginUser(action) {
     yield put({ type: actions.LOGIN_USER_SUCCESS, payload: decoded });
   } catch (err) {
     yield put({ type: actions.LOGIN_USER_FAILURE, payload: err.response.data });
+  }
+}
+
+function* workerLogoutUser() {
+  try {
+    //remove token from localStorage
+    localStorage.removeItem('jwtToken');
+    //remove authorization header
+    //pass false so that it hits the else statement in the function
+    setAuthToken(false);
+    yield put({ type: actions.LOGIN_USER_SUCCESS, payload: {}})
+  } catch (err) {
+    console.log(err)
   }
 }

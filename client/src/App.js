@@ -7,7 +7,7 @@ import { rootSaga } from "./sagas";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { LOGIN_USER_SUCCESS } from "./actions";
+import { LOGIN_USER_SUCCESS, LOGOUT_USER } from "./actions";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import HomePage from "./pages/HomePage";
@@ -33,12 +33,17 @@ sagaMiddleware.run(rootSaga);
   CHECK LOCAL STORAGE FOR THE BEARER TOKEN,
   ADD AUTHORIZATION TO AXIOS DEFAULTS (setAuthToken)
   AND SET THE USER DATA IN THE APPLICATION STATE 
-
 */
 if (localStorage.jwtToken) {
   setAuthToken(localStorage.jwtToken);
   const decodedUserFromToken = jwt_decode(localStorage.jwtToken);
   store.dispatch({ type: LOGIN_USER_SUCCESS, payload: decodedUserFromToken });
+  //check for expired token
+  const currentTime = Date.now() / 1000;
+  if(decodedUserFromToken.exp < currentTime) {
+    store.dispatch({ type: LOGOUT_USER });
+    window.location.href = '/login';
+  }
 }
 
 class App extends Component {
